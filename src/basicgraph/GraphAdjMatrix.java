@@ -1,6 +1,8 @@
 package basicgraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +110,26 @@ public class GraphAdjMatrix extends Graph {
 	 * @return List<Integer> a list of indices of vertices.  
 	 */	
 	public List<Integer> getDistance2(int v) {
-		return null;
+		List<Integer> inNeighbors = new ArrayList<Integer>();
+		for (int i = 0; i < getNumVertices(); i ++) {
+			for (int j=0; j< adjMatrix[v][i]; j++) {
+				inNeighbors.addAll(this.getNeighbors(i));
+			}
+		}
+		return inNeighbors;
+		
+		// sad that the below matrix multiplication does not work for all tests
+//		int[][] result = new int[adjMatrix.length][adjMatrix[0].length];
+//		for (int i = 0; i < adjMatrix.length; i++)
+//			for (int j = 0; j < adjMatrix[i].length; j++)
+//				for (int k = 0; k < adjMatrix.length; k++)
+//					result[i][j] += adjMatrix[i][k] * adjMatrix[k][j];
+//		
+//		List<Integer> retVal = new ArrayList<Integer>();
+//		for (int i = 0; i < result[v].length; i++) {
+//			if(result[v][i] != 0) retVal.add(i);
+//		}
+//		return retVal;
 	}
 	
 	/**
