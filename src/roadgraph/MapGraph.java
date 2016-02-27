@@ -32,13 +32,13 @@ import util.GraphLoader;
  */
 public class MapGraph {
 	// TODO: Add your member variables here in WEEK 2
-	private HashMap<GeographicPoint, ArrayList<Edge>> graph;
+	private HashMap<GeographicPoint, LinkedList<Edge>> graph;
 
 	/**
 	 * Create a new empty MapGraph
 	 */
 	public MapGraph() {
-		graph = new HashMap<GeographicPoint, ArrayList<Edge>>();
+		graph = new HashMap<GeographicPoint, LinkedList<Edge>>();
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class MapGraph {
 	 */
 	public int getNumEdges() {
 		int result = 0;
-		Iterator<Entry<GeographicPoint, ArrayList<Edge>>> it = graph.entrySet().iterator();
+		Iterator<Entry<GeographicPoint, LinkedList<Edge>>> it = graph.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<GeographicPoint, ArrayList<Edge>> pair = (Map.Entry<GeographicPoint, ArrayList<Edge>>) it.next();
+			Map.Entry<GeographicPoint, LinkedList<Edge>> pair = (Map.Entry<GeographicPoint, LinkedList<Edge>>) it.next();
 			result += pair.getValue().size();
 		}
 		return result;
@@ -88,7 +88,7 @@ public class MapGraph {
 		// TODO: Implement this method in WEEK 2
 		if (graph.containsKey(location))
 			return false;
-		graph.put(location, new ArrayList<Edge>());
+		graph.put(location, new LinkedList<Edge>());
 		return true;
 	}
 
@@ -128,7 +128,7 @@ public class MapGraph {
 			throw new IllegalArgumentException();
 
 		Edge e = new Edge(to, roadName, roadType, length);
-		graph.get(from).add(e);
+		graph.get(from).addFirst(e);
 	}
 
 	/**
@@ -169,7 +169,6 @@ public class MapGraph {
 		LinkedList<GeographicPoint> parent = new LinkedList<GeographicPoint>();
 
 		stack.push(start);
-		parent.addLast(start);
 		visited.put(start, true);
 		this.print();
 		System.out.println("start: " + start.x + "," + start.y + " end: " + goal.x + "," + goal.y);
@@ -178,13 +177,14 @@ public class MapGraph {
 		while (!stack.isEmpty()) {
 			GeographicPoint curr = stack.pop();
 			System.out.println(curr.x + " " + curr.y);
+			parent.addLast(curr);
 			if (curr.x == goal.x && curr.y == goal.y) // no .equals() ?
 				return parent;
 			for (Edge neighbor : graph.get(curr)) {
 				if (!visited.containsKey(neighbor.getLoc())) {
 					GeographicPoint n = neighbor.getLoc();
 					visited.put(neighbor.getLoc(), true);
-					parent.addLast(neighbor.getLoc());
+					
 					stack.add(neighbor.getLoc());
 				}
 			}
