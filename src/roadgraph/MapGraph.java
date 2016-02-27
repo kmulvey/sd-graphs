@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
@@ -117,7 +118,10 @@ public class MapGraph {
 		if (!graph.containsKey(from) || !graph.containsKey(to))
 			throw new IllegalArgumentException();
 		// check names
-		if (roadName == null || roadType == null || roadName.trim().length() <= 0 || roadType.trim().length() <= 0)
+		if (roadName == null || roadType == null) // || roadName.trim().length()
+													// <= 0 ||
+													// roadType.trim().length()
+													// <= 0)
 			throw new IllegalArgumentException();
 		// check length
 		if (length < 0)
@@ -159,32 +163,36 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal,
 			Consumer<GeographicPoint> nodeSearched) {
-		// TODO: Implement this method in WEEK 2
 
-		// Hook for visualization. See writeup.
-		// nodeSearched.accept(next.getLocation());
-		Queue<GeographicPoint> q = new LinkedList<GeographicPoint>();
-		HashMap<GeographicPoint, Integer> distTo = new HashMap<GeographicPoint, Integer>();
-		HashMap<GeographicPoint, Boolean> marked = new HashMap<GeographicPoint, Boolean>();
+		Stack<GeographicPoint> stack = new Stack<GeographicPoint>(); // lifo
+		HashMap<GeographicPoint, Boolean> visited = new HashMap<GeographicPoint, Boolean>();
+		LinkedList<GeographicPoint> parent = new LinkedList<GeographicPoint>();
 
-		for (GeographicPoint point : this.getVertices())
-			distTo.put(point, Integer.MAX_VALUE);
-		distTo.put(goal, 0);
-		marked.put(goal, true);
-		q.add(goal);
+		stack.push(start);
+		parent.addLast(start);
+		visited.put(start, true);
+		this.print();
+		System.out.println("start: " + start.x + "," + start.y + " end: " + goal.x + "," + goal.y);
+		System.out.println();
 
-		while (!q.isEmpty()) {
-			GeographicPoint v = q.remove();
-			for (int w : G.adj(v)) {
-				if (!marked[w]) {
-					edgeTo[w] = v;
-					distTo[w] = distTo[v] + 1;
-					marked[w] = true;
-					q.enqueue(w);
+		while (!stack.isEmpty()) {
+			GeographicPoint curr = stack.pop();
+			System.out.println(curr.x + " " + curr.y);
+			if (curr.x == goal.x && curr.y == goal.y) // no .equals() ?
+				return parent;
+			for (Edge neighbor : graph.get(curr)) {
+				if (!visited.containsKey(neighbor.getLoc())) {
+					GeographicPoint n = neighbor.getLoc();
+					visited.put(neighbor.getLoc(), true);
+					parent.addLast(neighbor.getLoc());
+					stack.add(neighbor.getLoc());
 				}
 			}
+			// not a good place to be
 		}
+
 		return null;
+
 	}
 
 	/**

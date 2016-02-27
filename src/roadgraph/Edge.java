@@ -14,11 +14,11 @@ public class Edge {
 		roadType=type;
 		length=len;
 	}
-	public GeographicPoint getLog() {
+	public GeographicPoint getLoc() {
 		return loc;
 	}
-	public void setLog(GeographicPoint log) {
-		this.loc = log;
+	public void setLoc(GeographicPoint loc) {
+		this.loc = loc;
 	}
 	public String getRoadName() {
 		return roadName;
